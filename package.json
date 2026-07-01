@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "clean": "rm -rf .next",
-    "dev": "npm run clean && next dev",
-    "build": "npm run clean && next build",
-    "start": "npm run build && next start",
+    "clean": "rm -rf .next .next-dev",
+    "dev": "rm -rf .next-dev && next dev",
+    "build": "rm -rf .next && next build",
+    "start": "next start",
     "lint": "eslint ."
   },
   "dependencies": {

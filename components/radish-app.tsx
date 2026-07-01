@@ -522,128 +522,130 @@ export function RadishApp() {
 
         <div className="showcase-layout">
           <div className="center-stage">
-            <div className="character-frame">
-              <RadishCharacter state={state} />
-            </div>
-            <div className="shadow" aria-hidden="true" />
-
-            <section className="interaction-console" data-state={state}>
-              <div
-                className="console-tabs"
-                role="tablist"
-                aria-label="Choose how to ask Radley"
-              >
-                <button
-                  type="button"
-                  role="tab"
-                  className="console-tab"
-                  aria-selected={mode === "voice"}
-                  data-active={mode === "voice"}
-                  onClick={() => setMode("voice")}
-                  disabled={state !== "idle"}
-                >
-                  Talk
-                </button>
-                <button
-                  type="button"
-                  role="tab"
-                  className="console-tab"
-                  aria-selected={mode === "text"}
-                  data-active={mode === "text"}
-                  onClick={() => setMode("text")}
-                  disabled={state !== "idle"}
-                >
-                  Type
-                </button>
+            <div className="radley-cluster">
+              <div className="character-frame">
+                <RadishCharacter state={state} />
               </div>
+              <div className="shadow" aria-hidden="true" />
 
-              <div className="console-status" data-tone={state}>
-                <span className="console-status-dot" aria-hidden="true" />
-                <div className="console-status-copy">
-                  <strong>{stateBadge}</strong>
-                  <span>{status.playbackHint || stateSummary}</span>
+              <section className="interaction-console" data-state={state}>
+                <div
+                  className="console-tabs"
+                  role="tablist"
+                  aria-label="Choose how to ask Radley"
+                >
+                  <button
+                    type="button"
+                    role="tab"
+                    className="console-tab"
+                    aria-selected={mode === "voice"}
+                    data-active={mode === "voice"}
+                    onClick={() => setMode("voice")}
+                    disabled={state !== "idle"}
+                  >
+                    Talk
+                  </button>
+                  <button
+                    type="button"
+                    role="tab"
+                    className="console-tab"
+                    aria-selected={mode === "text"}
+                    data-active={mode === "text"}
+                    onClick={() => setMode("text")}
+                    disabled={state !== "idle"}
+                  >
+                    Type
+                  </button>
                 </div>
-              </div>
 
-              <RadishCaption
-                error={status.error}
-                mode={mode}
-                progress={captionProgress}
-                reply={status.reply}
-                state={state}
-                transcript={status.transcript}
-              />
+                <div className="console-status" data-tone={state}>
+                  <span className="console-status-dot" aria-hidden="true" />
+                  <div className="console-status-copy">
+                    <strong>{stateBadge}</strong>
+                    <span>{status.playbackHint || stateSummary}</span>
+                  </div>
+                </div>
 
-              <div className="console-controls">
-                {mode === "voice" ? (
-                  <button
-                    type="button"
-                    className="magic-button"
-                    data-mode={state === "listening" ? "active" : "idle"}
-                    data-state={state}
-                    onClick={handleRecorderClick}
-                    disabled={interfaceBusy}
-                    aria-label={voiceButtonLabel}
-                  >
-                    <span className="magic-button-icon" aria-hidden="true">
-                      <svg viewBox="0 0 24 24" fill="none" className="mic-icon">
-                        <path
-                          d="M12 4a3 3 0 0 1 3 3v5a3 3 0 1 1-6 0V7a3 3 0 0 1 3-3Z"
-                          fill="currentColor"
-                        />
-                        <path
-                          d="M6.5 11.5a5.5 5.5 0 0 0 11 0M12 17v3M8.5 20h7"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                        />
-                      </svg>
-                    </span>
-                    <span className="magic-button-copy">
-                      <strong>{voiceButtonLabel}</strong>
-                      <small>{voiceButtonHint}</small>
-                    </span>
-                  </button>
-                ) : (
-                  <form className="text-form" onSubmit={handleTextSubmit}>
-                    <label className="sr-only" htmlFor="radley-question">
-                      Type your question for Radley
-                    </label>
-                    <textarea
-                      id="radley-question"
-                      className="text-input"
-                      rows={3}
-                      value={textPrompt}
-                      onChange={(event) => setTextPrompt(event.target.value)}
-                      onKeyDown={handleTextKeyDown}
-                      placeholder="How often should I water radishes?"
+                <RadishCaption
+                  error={status.error}
+                  mode={mode}
+                  progress={captionProgress}
+                  reply={status.reply}
+                  state={state}
+                  transcript={status.transcript}
+                />
+
+                <div className="console-controls">
+                  {mode === "voice" ? (
+                    <button
+                      type="button"
+                      className="magic-button"
+                      data-mode={state === "listening" ? "active" : "idle"}
+                      data-state={state}
+                      onClick={handleRecorderClick}
                       disabled={interfaceBusy}
-                    />
-                    <div className="text-form-footer">
-                      <span>Press Enter to send. Use Shift + Enter for a new line.</span>
-                      <button
-                        type="submit"
-                        className="console-send"
-                        disabled={interfaceBusy || !textPrompt.trim()}
-                      >
-                        Send question
-                      </button>
-                    </div>
-                  </form>
-                )}
+                      aria-label={voiceButtonLabel}
+                    >
+                      <span className="magic-button-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" className="mic-icon">
+                          <path
+                            d="M12 4a3 3 0 0 1 3 3v5a3 3 0 1 1-6 0V7a3 3 0 0 1 3-3Z"
+                            fill="currentColor"
+                          />
+                          <path
+                            d="M6.5 11.5a5.5 5.5 0 0 0 11 0M12 17v3M8.5 20h7"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                          />
+                        </svg>
+                      </span>
+                      <span className="magic-button-copy">
+                        <strong>{voiceButtonLabel}</strong>
+                        <small>{voiceButtonHint}</small>
+                      </span>
+                    </button>
+                  ) : (
+                    <form className="text-form" onSubmit={handleTextSubmit}>
+                      <label className="sr-only" htmlFor="radley-question">
+                        Type your question for Radley
+                      </label>
+                      <textarea
+                        id="radley-question"
+                        className="text-input"
+                        rows={3}
+                        value={textPrompt}
+                        onChange={(event) => setTextPrompt(event.target.value)}
+                        onKeyDown={handleTextKeyDown}
+                        placeholder="How often should I water radishes?"
+                        disabled={interfaceBusy}
+                      />
+                      <div className="text-form-footer">
+                        <span>Press Enter to send. Use Shift + Enter for a new line.</span>
+                        <button
+                          type="submit"
+                          className="console-send"
+                          disabled={interfaceBusy || !textPrompt.trim()}
+                        >
+                          Send question
+                        </button>
+                      </div>
+                    </form>
+                  )}
 
-                {hasReplayAudio && status.reply ? (
-                  <button
-                    type="button"
-                    className="console-secondary"
-                    onClick={handleReplay}
-                    disabled={state === "listening" || state === "thinking"}
-                  >
-                    Replay voice
-                  </button>
-                ) : null}
-              </div>
-            </section>
+                  {hasReplayAudio && status.reply ? (
+                    <button
+                      type="button"
+                      className="console-secondary"
+                      onClick={handleReplay}
+                      disabled={state === "listening" || state === "thinking"}
+                    >
+                      Replay voice
+                    </button>
+                  ) : null}
+                </div>
+              </section>
+            </div>
           </div>
 
           <GardenShowcase

@@ -156,6 +156,26 @@ textarea {
   gap: 12px;
 }
 
+.radley-cluster {
+  width: min(100%, 560px);
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+}
+
+.radley-cluster::before {
+  content: "";
+  position: absolute;
+  inset: 9% 8% 11%;
+  border-radius: 42px;
+  background:
+    radial-gradient(circle at top, rgba(255, 255, 255, 0.45), transparent 42%),
+    linear-gradient(180deg, rgba(255, 244, 248, 0.28), rgba(255, 255, 255, 0));
+  filter: blur(4px);
+  pointer-events: none;
+}
+
 .character-frame {
   width: 100%;
   display: grid;
@@ -224,6 +244,8 @@ textarea {
 
 .interaction-console {
   width: min(100%, 540px);
+  position: relative;
+  z-index: 1;
   display: grid;
   gap: 12px;
   padding: 14px;
@@ -849,32 +871,63 @@ textarea {
   .app-shell {
     display: grid;
     place-items: center;
+    padding: 18px 20px 24px;
   }
 
   .toy-stage {
-    gap: 20px;
+    gap: 8px;
+  }
+
+  .title-ribbon {
+    width: min(100%, 820px);
+    padding: 12px 20px;
+  }
+
+  .title-heading {
+    font-size: clamp(1.9rem, 4.1vw, 2.7rem);
+    line-height: 1.04;
   }
 
   .showcase-layout {
     grid-template-columns: minmax(220px, 1fr) minmax(340px, 480px) minmax(220px, 1fr);
     grid-template-areas: "left center right";
-    align-items: center;
+    align-items: start;
     gap: 24px;
   }
 
   .video-rail {
     width: 100%;
+    align-self: start;
+    transform: translateY(-68px);
   }
 
   .center-stage {
     max-width: 480px;
   }
 
+  .radley-cluster {
+    gap: 0;
+    transform: translateY(-10px);
+  }
+
+  .character-frame {
+    position: relative;
+    z-index: 1;
+  }
+
   .character-svg {
-    width: min(30vw, 340px);
+    width: min(29vw, 320px);
+  }
+
+  .shadow {
+    transform: translateY(-18px);
+  }
+
+  .interaction-console {
+    margin-top: -18px;
   }
 
   .response-body {
-    max-height: 210px;
+    max-height: 180px;
   }
 }
