@@ -12,6 +12,7 @@ export type RadishState = "idle" | "listening" | "thinking" | "speaking";
 
 export type RadishEvent =
   | "start-listening"
+  | "start-thinking"
   | "stop-listening"
   | "start-speaking"
   | "finish-speaking"
@@ -23,7 +24,8 @@ export function transitionRadishState(
 ): RadishState {
   switch (current) {
     case "idle":
-      return event === "start-listening" ? "listening" : current;
+      if (event === "start-listening") return "listening";
+      return event === "start-thinking" ? "thinking" : current;
     case "listening":
       if (event === "stop-listening") return "thinking";
       return event === "reset" ? "idle" : current;

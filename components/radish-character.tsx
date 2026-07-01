@@ -13,32 +13,23 @@ const LOOK_POINTS: Point[] = [
   { x: 1, y: 1 }
 ];
 
-function buildWavePath(amplitude: number, frequency: number, phase: number) {
-  const width = 52;
-  const startX = 134;
+function buildTalkingMouthPath(phase: number) {
+  const left = 135;
+  const right = 185;
+  const center = 160;
   const baseY = 214;
-  const points = 14;
+  const smileLift = 6 + Math.sin(phase * 0.8) * 1.6;
+  const openness = 8 + (Math.sin(phase) + 1) * 2.8;
 
-  let path = `M ${startX} ${baseY}`;
-
-  for (let index = 1; index <= points; index += 1) {
-    const progress = index / points;
-    const x = startX + width * progress;
-    const y =
-      baseY +
-      Math.sin(progress * Math.PI * frequency + phase) * amplitude +
-      Math.sin(progress * Math.PI + phase * 0.35) * amplitude * 0.18;
-
-    path += ` L ${x.toFixed(2)} ${y.toFixed(2)}`;
-  }
-
-  return path;
+  return `M ${left} ${baseY} Q ${center} ${(baseY - smileLift).toFixed(2)} ${right} ${baseY} Q ${center} ${(baseY + openness).toFixed(2)} ${left} ${baseY} Z`;
 }
 
 const IDLE_SMILE_PATH = "M 135 214 C 145 224, 175 224, 185 214";
 
 export function RadishCharacter({ state }: { state: RadishState }) {
   const speaking = state === "speaking";
+  const thinking = state === "thinking";
+  const listening = state === "listening";
   const [blink, setBlink] = useState(false);
   const [gaze, setGaze] = useState<Point>({ x: 0, y: 0 });
   const [phase, setPhase] = useState(0);
@@ -104,9 +95,7 @@ export function RadishCharacter({ state }: { state: RadishState }) {
     return () => window.cancelAnimationFrame(frame);
   }, [speaking]);
 
-  const mouthPath = useMemo(() => {
-    return speaking ? buildWavePath(7.5, 4.4, phase) : IDLE_SMILE_PATH;
-  }, [phase, speaking]);
+  const speakingMouthPath = useMemo(() => buildTalkingMouthPath(phase), [phase]);
 
   const eyeTransform = `translate(${gaze.x}px ${gaze.y}px)`;
 
@@ -146,12 +135,13 @@ export function RadishCharacter({ state }: { state: RadishState }) {
         />
         <path
           d="M104 170C126 150 195 137 230 182"
-          stroke="rgba(255,255,255,0.18)"
+          stroke="#ffffff"
+          strokeOpacity="0.18"
           strokeWidth="8"
           strokeLinecap="round"
         />
-        <ellipse cx="112" cy="230" rx="14" ry="9" fill="rgba(255,255,255,0.1)" />
-        <ellipse cx="208" cy="230" rx="14" ry="9" fill="rgba(255,255,255,0.1)" />
+        <ellipse cx="112" cy="230" rx="14" ry="9" fill="#ffffff" fillOpacity="0.1" />
+        <ellipse cx="208" cy="230" rx="14" ry="9" fill="#ffffff" fillOpacity="0.1" />
 
         <g transform="translate(0 2)">
           {blink ? (
@@ -171,6 +161,10 @@ export function RadishCharacter({ state }: { state: RadishState }) {
             </g>
           ) : (
             <g className="eye" transform={eyeTransform}>
+              <path
+                d="M110 177C126 162 194 162 210 177L210 188C193 180 127 180 110 188Z"
+                fill="rgba(255, 175, 193, 0.95)"
+              />
               <ellipse cx="132" cy="182" rx="15" ry="16" fill="white" />
               <ellipse cx="188" cy="182" rx="15" ry="16" fill="white" />
               <circle cx="132" cy="184" r="5.5" fill="#372012" />
@@ -181,17 +175,42 @@ export function RadishCharacter({ state }: { state: RadishState }) {
           )}
         </g>
 
-        <path
-          d={mouthPath}
-          fill="none"
-          stroke="#5a1f2e"
-          strokeWidth={speaking ? 5 : 4}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
+        {speaking ? (
+          <path
+            d={speakingMouthPath}
+            fill="#7a1532"
+            stroke="#5a1f2e"
+            strokeWidth="2.5"
+            strokeLinejoin="round"
+          />
+        ) : (
+          <path
+            d={IDLE_SMILE_PATH}
+            fill="none"
+            stroke="#5a1f2e"
+            strokeWidth="4"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        )}
 
         <ellipse cx="116" cy="216" rx="13" ry="9" fill="rgba(240, 123, 150, 0.26)" />
         <ellipse cx="204" cy="216" rx="13" ry="9" fill="rgba(240, 123, 150, 0.26)" />
+
+        {thinking ? (
+          <g className="thinking-orbs" aria-hidden="true">
+            <circle cx="206" cy="130" r="6" className="thinking-orb orb-one" />
+            <circle cx="225" cy="112" r="4.5" className="thinking-orb orb-two" />
+            <circle cx="238" cy="95" r="3.5" className="thinking-orb orb-three" />
+          </g>
+        ) : null}
+
+        {listening ? (
+          <g className="listening-rings" aria-hidden="true">
+            <circle cx="160" cy="213" r="92" className="listening-ring ring-one" />
+            <circle cx="160" cy="213" r="108" className="listening-ring ring-two" />
+          </g>
+        ) : null}
       </g>
 
       <defs>

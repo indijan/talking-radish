@@ -9,28 +9,37 @@ export const runtime = "nodejs";
 
 export async function POST(request: Request) {
   try {
-    const formData = await request.formData();
-    const audio = formData.get("audio");
+    const contentType = request.headers.get("content-type") || "";
+    let transcript = "";
+    let language = "same language as the reply";
 
-    if (!(audio instanceof File) || audio.size === 0) {
-      return NextResponse.json(
-        { error: "Please send an audio recording." },
-        { status: 400 }
-      );
+    if (contentType.includes("application/json")) {
+      const body = (await request.json()) as { prompt?: string };
+      transcript = body.prompt?.trim() || "";
+    } else {
+      const formData = await request.formData();
+      const audio = formData.get("audio");
+
+      if (!(audio instanceof File) || audio.size === 0) {
+        return NextResponse.json(
+          { error: "Please send an audio recording." },
+          { status: 400 }
+        );
+      }
+
+      const transcription = await transcribeAudio(audio);
+      transcript = transcription.text.trim();
+      language = transcription.language || language;
     }
-
-    const transcription = await transcribeAudio(audio);
-    const transcript = transcription.text.trim();
 
     if (!transcript) {
       return NextResponse.json(
-        { error: "I couldn't hear a radish question in that recording." },
+        { error: "Please ask a radish question first." },
         { status: 400 }
       );
     }
 
     const reply = await generateRadishReply({ transcript });
-    const language = transcription.language || "en";
     const speech = await synthesizeRadishSpeech({ transcript, reply, language });
 
     return NextResponse.json({
