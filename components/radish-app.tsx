@@ -97,6 +97,7 @@ export function RadishApp() {
   const silentTimerRef = useRef<number>(0);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const audioUrlRef = useRef<string | null>(null);
+  const recorderActionRef = useRef<"submit" | "cancel">("submit");
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -175,6 +176,7 @@ export function RadishApp() {
   const resetToIdle = () => {
     clearProgressTimers();
     setCaptionProgress(0);
+    recorderActionRef.current = "submit";
     setState((current) => transitionRadishState(current, "reset"));
   };
 
@@ -384,6 +386,7 @@ export function RadishApp() {
       streamRef.current = stream;
       recorderRef.current = recorder;
       chunksRef.current = [];
+      recorderActionRef.current = "submit";
 
       recorder.ondataavailable = (event) => {
         if (event.data.size > 0) {
@@ -397,7 +400,8 @@ export function RadishApp() {
         streamRef.current = null;
         recorderRef.current = null;
 
-        if (audio.size === 0) {
+        if (recorderActionRef.current === "cancel" || audio.size === 0) {
+          recorderActionRef.current = "submit";
           resetToIdle();
           return;
         }
@@ -429,7 +433,38 @@ export function RadishApp() {
       return;
     }
 
+    recorderActionRef.current = "submit";
     recorderRef.current?.stop();
+  };
+
+  const interruptCurrentTurn = () => {
+    if (state === "listening") {
+      recorderActionRef.current = "cancel";
+      recorderRef.current?.stop();
+      return;
+    }
+
+    if (state === "thinking") {
+      requestAbortRef.current?.abort();
+      requestAbortRef.current = null;
+      setStatus((current) => ({
+        ...current,
+        error: "",
+        playbackHint: ""
+      }));
+      resetToIdle();
+      return;
+    }
+
+    if (state === "speaking") {
+      stopPlayback();
+      setStatus((current) => ({
+        ...current,
+        playbackHint: ""
+      }));
+      setCaptionProgress(1);
+      resetToIdle();
+    }
   };
 
   const handleRecorderClick = async () => {
@@ -504,6 +539,13 @@ export function RadishApp() {
           : "Tap once to record";
 
   const interfaceBusy = state === "thinking" || state === "speaking";
+  const showInterrupt = state === "listening" || state === "thinking" || state === "speaking";
+  const interruptLabel =
+    state === "listening"
+      ? "Cancel recording"
+      : state === "thinking"
+        ? "Stop thinking"
+        : "Stop speaking";
 
   return (
     <main className="app-shell">
@@ -633,18 +675,29 @@ export function RadishApp() {
                     </form>
                   )}
 
-                  {hasReplayAudio && status.reply ? (
-                    <button
-                      type="button"
-                      className="console-secondary"
+                {hasReplayAudio && status.reply ? (
+                  <button
+                    type="button"
+                    className="console-secondary"
                       onClick={handleReplay}
                       disabled={state === "listening" || state === "thinking"}
-                    >
-                      Replay voice
-                    </button>
-                  ) : null}
-                </div>
-              </section>
+                  >
+                    Replay voice
+                  </button>
+                ) : null}
+
+                {showInterrupt ? (
+                  <button
+                    type="button"
+                    className="console-ghost"
+                    onClick={interruptCurrentTurn}
+                    aria-label={interruptLabel}
+                  >
+                    {interruptLabel}
+                  </button>
+                ) : null}
+              </div>
+            </section>
             </div>
           </div>
 

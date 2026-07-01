@@ -170,9 +170,10 @@ textarea {
   inset: 9% 8% 11%;
   border-radius: 42px;
   background:
-    radial-gradient(circle at top, rgba(255, 255, 255, 0.45), transparent 42%),
-    linear-gradient(180deg, rgba(255, 244, 248, 0.28), rgba(255, 255, 255, 0));
-  filter: blur(4px);
+    radial-gradient(circle at top, rgba(255, 245, 249, 0.24), transparent 44%),
+    linear-gradient(180deg, rgba(255, 244, 248, 0.18), rgba(255, 255, 255, 0));
+  filter: blur(3px);
+  opacity: 0.8;
   pointer-events: none;
 }
 
@@ -568,7 +569,8 @@ textarea {
 }
 
 .console-send,
-.console-secondary {
+.console-secondary,
+.console-ghost {
   border: 0;
   border-radius: 999px;
   padding: 11px 16px;
@@ -591,13 +593,22 @@ textarea {
   color: #8c2946;
 }
 
+.console-ghost {
+  justify-self: start;
+  background: rgba(116, 87, 58, 0.08);
+  color: #7a5b3e;
+  border: 1px solid rgba(116, 87, 58, 0.12);
+}
+
 .console-send:hover,
-.console-secondary:hover {
+.console-secondary:hover,
+.console-ghost:hover {
   transform: translateY(-1px);
 }
 
 .console-send:disabled,
-.console-secondary:disabled {
+.console-secondary:disabled,
+.console-ghost:disabled {
   cursor: not-allowed;
   opacity: 0.65;
 }
@@ -898,7 +909,7 @@ textarea {
   .video-rail {
     width: 100%;
     align-self: start;
-    transform: translateY(-68px);
+    transform: translateY(-44px);
   }
 
   .center-stage {
@@ -929,5 +940,16 @@ textarea {
 
   .response-body {
     max-height: 180px;
+  }
+}
+
+@media (max-width: 699px) {
+  .radley-cluster::before {
+    inset: 12% 10% 12%;
+    background:
+      radial-gradient(circle at top, rgba(255, 245, 249, 0.12), transparent 42%),
+      linear-gradient(180deg, rgba(255, 244, 248, 0.08), rgba(255, 255, 255, 0));
+    filter: blur(2px);
+    opacity: 0.55;
   }
 }
