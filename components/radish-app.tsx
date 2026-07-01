@@ -619,34 +619,47 @@ export function RadishApp() {
 
                 <div className="console-controls">
                   {mode === "voice" ? (
-                    <button
-                      type="button"
-                      className="magic-button"
-                      data-mode={state === "listening" ? "active" : "idle"}
-                      data-state={state}
-                      onClick={handleRecorderClick}
-                      disabled={interfaceBusy}
-                      aria-label={voiceButtonLabel}
-                    >
-                      <span className="magic-button-icon" aria-hidden="true">
-                        <svg viewBox="0 0 24 24" fill="none" className="mic-icon">
-                          <path
-                            d="M12 4a3 3 0 0 1 3 3v5a3 3 0 1 1-6 0V7a3 3 0 0 1 3-3Z"
-                            fill="currentColor"
-                          />
-                          <path
-                            d="M6.5 11.5a5.5 5.5 0 0 0 11 0M12 17v3M8.5 20h7"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                          />
-                        </svg>
-                      </span>
-                      <span className="magic-button-copy">
-                        <strong>{voiceButtonLabel}</strong>
-                        <small>{voiceButtonHint}</small>
-                      </span>
-                    </button>
+                    <div className="console-action-row" data-split={showInterrupt}>
+                      <button
+                        type="button"
+                        className="magic-button"
+                        data-mode={state === "listening" ? "active" : "idle"}
+                        data-state={state}
+                        onClick={handleRecorderClick}
+                        disabled={interfaceBusy}
+                        aria-label={voiceButtonLabel}
+                      >
+                        <span className="magic-button-icon" aria-hidden="true">
+                          <svg viewBox="0 0 24 24" fill="none" className="mic-icon">
+                            <path
+                              d="M12 4a3 3 0 0 1 3 3v5a3 3 0 1 1-6 0V7a3 3 0 0 1 3-3Z"
+                              fill="currentColor"
+                            />
+                            <path
+                              d="M6.5 11.5a5.5 5.5 0 0 0 11 0M12 17v3M8.5 20h7"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                            />
+                          </svg>
+                        </span>
+                        <span className="magic-button-copy">
+                          <strong>{voiceButtonLabel}</strong>
+                          <small>{voiceButtonHint}</small>
+                        </span>
+                      </button>
+
+                      {showInterrupt ? (
+                        <button
+                          type="button"
+                          className="console-ghost"
+                          onClick={interruptCurrentTurn}
+                          aria-label={interruptLabel}
+                        >
+                          {interruptLabel}
+                        </button>
+                      ) : null}
+                    </div>
                   ) : (
                     <form className="text-form" onSubmit={handleTextSubmit}>
                       <label className="sr-only" htmlFor="radley-question">
@@ -664,40 +677,42 @@ export function RadishApp() {
                       />
                       <div className="text-form-footer">
                         <span>Press Enter to send. Use Shift + Enter for a new line.</span>
-                        <button
-                          type="submit"
-                          className="console-send"
-                          disabled={interfaceBusy || !textPrompt.trim()}
-                        >
-                          Send question
-                        </button>
+                        <div className="console-action-row" data-split={showInterrupt}>
+                          <button
+                            type="submit"
+                            className="console-send"
+                            disabled={interfaceBusy || !textPrompt.trim()}
+                          >
+                            Send question
+                          </button>
+
+                          {showInterrupt ? (
+                            <button
+                              type="button"
+                              className="console-ghost"
+                              onClick={interruptCurrentTurn}
+                              aria-label={interruptLabel}
+                            >
+                              {interruptLabel}
+                            </button>
+                          ) : null}
+                        </div>
                       </div>
                     </form>
                   )}
 
-                {hasReplayAudio && status.reply ? (
-                  <button
-                    type="button"
-                    className="console-secondary"
+                  {hasReplayAudio && status.reply ? (
+                    <button
+                      type="button"
+                      className="console-secondary"
                       onClick={handleReplay}
                       disabled={state === "listening" || state === "thinking"}
-                  >
-                    Replay voice
-                  </button>
-                ) : null}
-
-                {showInterrupt ? (
-                  <button
-                    type="button"
-                    className="console-ghost"
-                    onClick={interruptCurrentTurn}
-                    aria-label={interruptLabel}
-                  >
-                    {interruptLabel}
-                  </button>
-                ) : null}
-              </div>
-            </section>
+                    >
+                      Replay voice
+                    </button>
+                  ) : null}
+                </div>
+              </section>
             </div>
           </div>
 

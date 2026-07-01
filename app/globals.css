@@ -458,6 +458,21 @@ textarea {
   gap: 10px;
 }
 
+.console-action-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
+  align-items: stretch;
+}
+
+.console-action-row[data-split="true"] {
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+}
+
+.console-action-row > * {
+  width: 100%;
+}
+
 .magic-button {
   width: 100%;
   min-height: 84px;
@@ -555,10 +570,7 @@ textarea {
 }
 
 .text-form-footer {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
+  display: grid;
   gap: 10px;
 }
 
@@ -594,10 +606,10 @@ textarea {
 }
 
 .console-ghost {
-  justify-self: start;
   background: rgba(116, 87, 58, 0.08);
   color: #7a5b3e;
   border: 1px solid rgba(116, 87, 58, 0.12);
+  min-height: 84px;
 }
 
 .console-send:hover,
@@ -909,7 +921,8 @@ textarea {
   .video-rail {
     width: 100%;
     align-self: start;
-    transform: translateY(-44px);
+    transform: none;
+    margin-top: 10px;
   }
 
   .center-stage {
