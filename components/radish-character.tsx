@@ -146,12 +146,12 @@ export function RadishCharacter({ state }: { state: RadishState }) {
         />
         <path
           d="M104 170C126 150 195 137 230 182"
-          stroke="rgba(255,255,255,0.32)"
+          stroke="rgba(255,255,255,0.18)"
           strokeWidth="8"
           strokeLinecap="round"
         />
-        <ellipse cx="112" cy="230" rx="14" ry="9" fill="rgba(255,255,255,0.18)" />
-        <ellipse cx="208" cy="230" rx="14" ry="9" fill="rgba(255,255,255,0.18)" />
+        <ellipse cx="112" cy="230" rx="14" ry="9" fill="rgba(255,255,255,0.1)" />
+        <ellipse cx="208" cy="230" rx="14" ry="9" fill="rgba(255,255,255,0.1)" />
 
         <g transform="translate(0 2)">
           {blink ? (
@@ -196,10 +196,10 @@ export function RadishCharacter({ state }: { state: RadishState }) {
 
       <defs>
         <linearGradient id="radish-body" x1="110" y1="112" x2="206" y2="326">
-          <stop offset="0%" stopColor="#ffd9e0" />
-          <stop offset="28%" stopColor="#ff476c" />
-          <stop offset="68%" stopColor="#eb1f4f" />
-          <stop offset="100%" stopColor="#b40034" />
+          <stop offset="0%" stopColor="#ff9eb0" />
+          <stop offset="18%" stopColor="#ff5d78" />
+          <stop offset="54%" stopColor="#e11247" />
+          <stop offset="100%" stopColor="#7c001e" />
         </linearGradient>
       </defs>
     </svg>

@@ -4,7 +4,6 @@ import { useMemo } from "react";
 import type { RadishState } from "@/lib/radish";
 
 type RadishCaptionProps = {
-  active: boolean;
   error: string;
   progress: number;
   reply: string;
@@ -17,7 +16,6 @@ function clampProgress(progress: number) {
 }
 
 export function RadishCaption({
-  active,
   error,
   progress,
   reply,
@@ -84,12 +82,8 @@ export function RadishCaption({
 
   return (
     <section className="speech-bubble" aria-live="polite">
-      <p className="caption-label">{active ? "Ready for the next question" : "Wake up Radley"}</p>
-      <p className="caption-line">
-        {active
-          ? "I will keep listening for new radish questions until you pause me."
-          : "Press the button once and I will stay on to chat about radishes."}
-      </p>
+      <p className="caption-label">Ready to chat</p>
+      <p className="caption-line">Tap the button, ask your question, then tap again so I can answer.</p>
     </section>
   );
 }
